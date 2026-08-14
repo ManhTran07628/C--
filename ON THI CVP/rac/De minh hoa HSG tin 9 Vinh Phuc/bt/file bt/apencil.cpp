@@ -1,0 +1,30 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long
+const int N = 1e7+1;
+ll a[N];
+
+int main()
+{
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);cout.tie(0);
+    #define taskname "apencil"
+    if(fopen(taskname ".inp","r"))
+    {
+        freopen(taskname ".inp","r",stdin);
+        freopen(taskname ".out","w",stdout);
+    }
+    int A,B,X;
+    cin >> A >> B >> X;
+    if(A >= X) {
+        cout << B;
+        return 0;
+    }
+    if(X % A == 0) {
+        cout << (X/A)*B;
+        return 0;
+    }
+    ll sotien = (A+(X/A*A))/A*B;
+    cout << sotien;
+    return 0;
+}

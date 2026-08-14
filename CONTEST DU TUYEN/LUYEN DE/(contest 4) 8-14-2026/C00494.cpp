@@ -1,0 +1,163 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define ll long long
+#define fi first
+#define se second
+#define oo (ll) 1e18
+#define pii pair<ll,ll>
+const int MM = 1e6 + 7;
+int n,d,a[MM];
+int mp[MM];
+
+void sieve()
+{
+    for(ll i = 2;i * i < MM;i++)
+        if(mp[i] == 0)
+            for(ll j = i * i;j < MM;j += i)
+                if(mp[j] == 0)
+                    mp[j] = i;
+    for(int i = 2;i < MM;i++)
+        if(mp[i] == 0)
+            mp[i] = i;
+}
+
+namespace subtask1
+{
+    void solve()
+    {
+        int res = 0;
+        for(int i = 1;i <= n;i++) {
+
+            for(int j = i + 1;j <= n;j++) {
+
+                map<int,int> cnt;
+                int x = a[i];
+                while(x > 1) {
+                    int p = mp[x];
+                    while(x % p == 0) {
+                        cnt[p]++;
+                        x /= p;
+                    }
+                }
+
+                x = a[j];
+                while(x > 1) {
+                    int p = mp[x];
+                    while(x % p == 0) {
+                        cnt[p]++;
+                        x /= p;
+                    }
+                }
+
+                bool ok = 1;
+
+                for(auto p:cnt) {
+                    if(p.se % d != 0) {ok = 0; break;}
+                }
+
+                res += ok;
+            }
+
+        }
+
+        cout << res;
+    }
+}
+
+namespace subtask2
+{
+    ll valdiv[MM],cnt[MM];
+    void solve()
+    {
+        for(ll i = 1;i * i < MM;i++) {
+            for(ll j = 1;j * i * i < MM;j++) {
+                valdiv[j * i * i] = j;
+            }
+        }
+
+        ll res = 0;
+        for(int i = 1;i <= n;i++) {
+            res += cnt[ valdiv[ a[i] ] ];
+            cnt[ valdiv[ a[i] ] ]++;
+        }
+        cout << res;
+    }
+}
+
+namespace sol
+{
+    pii valdiv[MM];
+    ll cnt[MM];
+
+    ll binpow(ll a,ll b)
+    {
+        if(b == 0) return 1;
+        ll x = binpow(a,b / 2);
+        if(b % 2 == 1) return x * x * a;
+        return x * x;
+    }
+
+    ll process(ll k)
+    {
+        ll add = 1;
+
+        while(k > 1) {
+            int p = mp[k];
+            int cur_factor = 0;
+            while(k % p == 0) {
+                cur_factor++;
+                k /= p;
+            }
+            if(cur_factor <= d) {
+                ll need = binpow(p,d - cur_factor);
+                if(need > MM - 1) return 0;
+                add *= need;
+                if(add > MM - 1) return 0;
+            }
+            else return 0;
+        }
+        return add;
+    }
+
+    void solve()
+    {
+        for(ll i = 1;binpow(i,d) < MM;i++) {
+            ll x = binpow(i,d);
+            for(ll j = 1;j * x < MM;j++) {
+                ll k = j;
+                ll val = process(k);
+                if(val > 0) {
+                    valdiv[j * x] = {j,val};
+                }
+            }
+        }
+
+
+        ll res = 0;
+        for(int i = 1;i <= n;i++) {
+            if(valdiv[ a[i] ].fi == 0) continue;
+            res += cnt[ valdiv[ a[i] ].se ];
+            cnt[ valdiv[ a[i] ].fi ]++;
+        }
+
+        cout << res;
+    }
+}
+
+signed main()
+{
+    ios_base::sync_with_stdio(0);
+    cin.tie(0); cout.tie(0);
+    #define taskname ""
+    if(fopen(taskname ".inp","r")) {
+        freopen(taskname ".inp","r",stdin);
+        freopen(taskname ".out","w",stdout);
+    }
+    sieve();
+    cin >> n >> d;
+    for(int i = 1;i <= n;i++) cin >> a[i];
+    if(n <= 1000) subtask1::solve();
+    else if(d == 2) subtask2::solve();
+    else sol::solve();
+    return 0;
+}

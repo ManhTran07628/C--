@@ -1,0 +1,15 @@
+#include <bits/stdc++.h>
+using namespace std;
+#define int long long
+#define fi first
+#define se second
+const int MM = 1e6+7;
+
+
+signed main()
+{
+    ios_base::sync_with_stdio(0);
+    cin.tie(0);
+    
+    return 0;
+}
