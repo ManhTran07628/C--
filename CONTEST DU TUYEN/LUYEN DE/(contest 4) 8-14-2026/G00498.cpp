@@ -21,7 +21,7 @@ signed main()
     cin >> n;
     for(int i = 1;i <= n;i++) {
         cin >> events[i].fi >> events[i].se;
-    }
+    } 
     sort(events+1,events+n+1,[] (pii a,pii b){return a.se < b.se;});
     ll cur_time = 0;
     priority_queue<ll> q;
